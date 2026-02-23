@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func Ex3Branchless() {
+func Ex3BranchlessBitwise() {
 
 	// Take inputs from user...
 	fmt.Println("Enter the array size: ")
@@ -27,10 +27,8 @@ func Ex3Branchless() {
 		// check whether the current sum greater that the current value ...
 		checkCurrent := ((-current_sum) >> 63)
 		// no true and current sum is smaller than the current value then make a fresh start...
-		current_sum = (arr[i] &^ checkCurrent) | (current_sum & checkCurrent) 
+		current_sum = (arr[i] &^ checkCurrent) | ((current_sum + arr[i]) & checkCurrent) 
 		temp_start = (i &^ checkCurrent) | (temp_start & checkCurrent)
-		// if true then update current sum
-		current_sum += (arr[i] & checkCurrent)
 		// update max sum with new maximum value...
 		checkMax := ((current_sum - max_sum) >> 63)
 		max_sum = (current_sum &^ checkMax) | (max_sum & checkMax)
