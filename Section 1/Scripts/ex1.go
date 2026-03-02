@@ -15,9 +15,11 @@ Output: 3 1 2 3 4 5
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-func Ex1() {
+func main() {
 
 	// Take input from user and declare variables...
 	var array_size, k int
@@ -51,11 +53,32 @@ func Ex1() {
 		index = (index + 1) % array_size // this updates makes sure that the index will return to zero when reach the limit...
 	}
 
-	fmt.Println(result)
+	fmt.Println(arr)
 
 	/*
-		*** CHALLENGE YOURSELF ***
-		this code has a memory complexit of O(2) because we used two array try to rewrite the code so that it will be O(1)
+			*** CHALLENGE YOURSELF ***
+			this code has a memory complexit of O(2) because we used two array try to rewrite the code so that it will be O(1)
+			// Rotation number one from 0 to array_size-1
+		end := array_size -1
+		for i :=0; i < end; i++{
+			arr[i], arr[end] = arr[end], arr[i]
+			end --
+		}
+
+		// Rotation number two from 0 to k-1
+		end = k-1
+		for i :=0; i < end; i++{
+			arr[i], arr[end] = arr[end], arr[i]
+			end --
+		}
+
+		// Rotation number three from k to array_size - 1
+		end = array_size - 1
+		for i :=k; i < end; i++{
+			arr[i], arr[end] = arr[end], arr[i]
+			end --
+		}
+
 
 	*/
 

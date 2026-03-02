@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func hello() {
 
 	var input_value int
 	max := 0
