@@ -2,35 +2,45 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 )
 
-func main() {
+type Address struct {
+	Type    string
+	City    string
+	Country string
+}
 
-	in_file_path := "dataset_2_6.txt"
-	out_file_path := "output.txt"
+type VCard struct {
+	FirstName string
+	LastName  string
+	Addresses []*Address
+	Remark    string
+}
 
-	// open file for reading...
-	file1, _ := os.OpenFile(in_file_path, os.O_RDONLY, 0)
+func main2() {
+	pa := &Address{"private", "Aartselaar", "Belgium"}
+	wa := &Address{"work", "Boom", "Belgium"}
+	vc := VCard{"Jan", "Kersschot", []*Address{pa, wa}, "none"}
 
-	file2, _ := os.OpenFile(out_file_path, os.O_WRONLY|os.O_CREATE, 0666)
+	js, _ := json.Marshal(vc)
+	fmt.Printf("JSON format: %s", js)
 
-	defer file1.Close()
-	defer file2.Close()
+	file, _ := os.OpenFile("vcard.json", os.O_CREATE | os.O_WRONLY, 0)
 
-	// read the content of the first file...
+	defer file.Close()
 
-	bytes, _ := io.ReadAll(file1)
-	data := string(bytes)
+	enc := json.NewEncoder(file)
 
-	// Write the content in the second file...
+	err := enc.Encode(vc)
 
-	writer := bufio.NewWriter(file2)
-	writer.WriteString(data)
+	if err != nil {
+		fmt.Println("Error in encoding json")
+		}
 
-	writer.Flush()
 }
 
 func Read_File_3() {
@@ -122,4 +132,29 @@ func Write_File_1() {
 	}
 
 	writer.Flush() // The actual call that saves and writes all our contents and updates...
+}
+
+func Write_File_2() {
+	in_file_path := "dataset_2_6.txt"
+	out_file_path := "output.txt"
+
+	// open file for reading...
+	file1, _ := os.OpenFile(in_file_path, os.O_RDONLY, 0)
+
+	file2, _ := os.OpenFile(out_file_path, os.O_WRONLY|os.O_CREATE, 0666)
+
+	defer file1.Close()
+	defer file2.Close()
+
+	// read the content of the first file...
+
+	bytes, _ := io.ReadAll(file1)
+	data := string(bytes)
+
+	// Write the content in the second file...
+
+	writer := bufio.NewWriter(file2)
+	writer.WriteString(data)
+
+	writer.Flush()
 }
