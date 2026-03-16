@@ -1,0 +1,36 @@
+Results of file with index: 0 
+G: 16883
+C: 17243
+T: 25421
+A: 26419
+
+Results of file with index: 4 
+G: 1254
+A: 1291
+T: 1684
+C: 1157
+
+Results of file with index: 5 
+G: 1254
+A: 1291
+T: 1684
+C: 1157
+
+Results of file with index: 2 
+G: 1254
+A: 1291
+T: 1684
+C: 1157
+
+Results of file with index: 3 
+G: 12820
+C: 11362
+A: 12334
+T: 11986
+
+Results of file with index: 1 
+A: 26419
+G: 16883
+C: 17243
+T: 25421
+

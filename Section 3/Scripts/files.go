@@ -21,7 +21,7 @@ type VCard struct {
 	Remark    string
 }
 
-func main2() {
+func main() {
 	pa := &Address{"private", "Aartselaar", "Belgium"}
 	wa := &Address{"work", "Boom", "Belgium"}
 	vc := VCard{"Jan", "Kersschot", []*Address{pa, wa}, "none"}
@@ -29,7 +29,7 @@ func main2() {
 	js, _ := json.Marshal(vc)
 	fmt.Printf("JSON format: %s", js)
 
-	file, _ := os.OpenFile("vcard.json", os.O_CREATE | os.O_WRONLY, 0)
+	file, _ := os.OpenFile("vcard.json", os.O_WRONLY|os.O_CREATE, 0666)
 
 	defer file.Close()
 
@@ -39,7 +39,7 @@ func main2() {
 
 	if err != nil {
 		fmt.Println("Error in encoding json")
-		}
+	}
 
 }
 
@@ -78,7 +78,7 @@ func Read_File_1() {
 	file_path := "dataset_2_6.txt"
 
 	// The file_handle here is the pointer to our stream...
-	file_handle, err := os.Open(file_path)
+	file_handle, err := os.OpenFile(file_path, os.O_RDONLY, 0)
 
 	if err != nil {
 		fmt.Printf("An error occurred on opening the file \n")

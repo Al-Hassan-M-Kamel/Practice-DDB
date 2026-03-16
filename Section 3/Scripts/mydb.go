@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -16,13 +17,13 @@ type Customer struct {
 	total_spent float64
 }
 
-func main() {
+func main2() {
 
 	// Connect to DB...
 	cfg := mysql.NewConfig()
 
 	cfg.User = "root"
-	cfg.Passwd = "11h2838*56K17"
+	cfg.Passwd = os.Getenv("MYSQL_PASS")
 	cfg.Net = "tcp"
 	cfg.Addr = "127.0.0.1:3306"
 	cfg.DBName = "practice"
