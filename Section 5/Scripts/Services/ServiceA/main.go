@@ -9,7 +9,7 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Hello From ServiceA")
 }
 
-func main() {
+func main1() {
 
 	server := http.Server{
 		Addr: "127.0.0.1:1010",

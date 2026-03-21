@@ -2,20 +2,29 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 )
 
+func CMD_Routine(file_path string, output_flow chan string) {
+	output, _ := exec.Command("./Test/cmd/proc.exe", "-in_file", file_path).CombinedOutput()
+	output_flow <- string(output)
+}
+
 func main() {
-	
 
-	// First of all set your command...
+	files, _ := os.ReadDir("./Data")
 
-	output, err := exec.Command("../cmd/main.exe", "-in", "../Data/gene.fna").CombinedOutput()
+	output_flow := make(chan string, len(files))
 
-	if err != nil {
-		panic(err)
+	for _, file := range files {
+		file_path := fmt.Sprintf("./Data/%s", file.Name())
+
+		go CMD_Routine(file_path, output_flow)
+
 	}
 
-	fmt.Println(string(output))
-
+	for i := 0; i < len(files); i++ {
+		fmt.Println(<-output_flow)
+	}
 }

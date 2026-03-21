@@ -9,13 +9,17 @@ func main() {
 
 	fmt.Println("In main()")
 
-	ch := make(chan int)
+	ch := make(chan string, 2)
 
-	go pump(ch)
+	go Long_Wait(ch)
 
-	for i := 0; i < 10; i++ {
-		fmt.Println(<-ch)
+	go Short_Wait(ch)
+
+	for i := 0; i < 2; i++ {
+		<-ch
 	}
+
+	fmt.Println("main() has finished")
 
 }
 func pump(ch chan int) {
@@ -41,14 +45,18 @@ func Get_Data(ch chan string) {
 
 }
 
-func Long_Wait() {
+func Long_Wait(ch chan string) {
 	fmt.Println("Beginning Long_Wait()")
 	time.Sleep(5 * 1e9)
 	fmt.Println("End of Long_Wait()")
+
+	ch <- "I have finished"
 }
 
-func Short_Wait() {
+func Short_Wait(ch chan string) {
 	fmt.Println("Beginning Short_Wait()")
 	time.Sleep(2 * 1e9)
 	fmt.Println("End of Short_Wait()")
+
+	ch <- "I have finished"
 }

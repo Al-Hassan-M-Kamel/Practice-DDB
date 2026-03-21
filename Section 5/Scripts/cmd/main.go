@@ -31,7 +31,7 @@ func Test() {
 
 func main() {
 
-	in := flag.String("in", "", "Take the path to the fasta file")
+	in := flag.String("in_file", "", "Take the path to the fasta file")
 
 	flag.Parse()
 

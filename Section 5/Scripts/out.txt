@@ -1,0 +1,36 @@
+The results of the file gene.fna is :
+A: 26419
+G: 16883
+C: 17243
+T: 25421
+
+The results of the file phix2.fa is :
+C: 1157
+G: 1254
+A: 1291
+T: 1684
+
+The results of the file genome.fa is :
+C: 1157
+G: 1254
+A: 1291
+T: 1684
+
+The results of the file phix.fa is :
+G: 1254
+A: 1291
+T: 1684
+C: 1157
+
+The results of the file lambda_virus.fa is :
+G: 12820
+C: 11362
+A: 12334
+T: 11986
+
+The results of the file gene2.fna is :
+A: 26419
+G: 16883
+C: 17243
+T: 25421
+

@@ -71,6 +71,3 @@ func Short_Wait(ch chan string) {
 	ch <- "I have finished"
 }
 
-func Ex_1() {
-
-}

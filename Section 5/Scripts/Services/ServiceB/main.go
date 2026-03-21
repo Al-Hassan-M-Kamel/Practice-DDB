@@ -19,7 +19,7 @@ func CallServiceA(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Service B received: %s", string(body))
 }
 
-func main() {
+func main1() {
 
 	server := http.Server{
 		Addr: "127.0.0.1:9080",
