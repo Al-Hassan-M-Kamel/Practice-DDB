@@ -1,6 +1,7 @@
 package SServices
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -44,14 +45,15 @@ func Get_IP() string {
 	return ""
 }
 
-func Save_Handler(w http.ResponseWriter, r *http.Request) {
+func Save_File_Handler(w http.ResponseWriter, r *http.Request) {
 
-	// 1- Check Method Only POST allowed...
+	// 1- Check Method...
 	if r.Method != http.MethodPost {
 		http.Error(w, "Only POST is allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
+	fmt.Println("Request Recieved...")
 	// 2- Parse Multipart files with maximum 10 MB in RAM...
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
@@ -69,14 +71,12 @@ func Save_Handler(w http.ResponseWriter, r *http.Request) {
 
 	defer file.Close()
 
-	// 4- Create folder to store files in located in the same dir with this script...
+	// 4- Create folder to store files in...
 	err = os.MkdirAll("./Slave/Master_Files", os.ModePerm)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	// 5- Save the files in the new folder...
 
 	dst, err := os.Create("./Slave/Master_Files/" + handler.Filename)
 	if err != nil {

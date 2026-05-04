@@ -1,4 +1,4 @@
-package MServices
+package main
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path"
 	"time"
 )
 
@@ -17,9 +18,9 @@ type Slave struct {
 	Slave_id int    `json:"slave"`
 }
 
-func Config() map[int]string {
+func Config(config_file_path string) map[int]string {
 
-	json_file, err := os.Open("./MServices/config.json")
+	json_file, err := os.Open(config_file_path)
 	if err != nil {
 		fmt.Println("Error in opening file")
 		return nil
@@ -82,7 +83,7 @@ func Organize_Dir_Data(dir_path string, slaves_count int) map[int][]string {
 
 }
 
-func Send_File(file_path string, file_name string, url string) {
+func Send_File(file_path string, file_name string, url string, flow chan<- int) {
 	/*
 		This function responsible for sending one file throuth the network.
 		file_path: the path of the file in the source host to send...
@@ -95,6 +96,7 @@ func Send_File(file_path string, file_name string, url string) {
 	file, err := os.Open(file_path)
 	if err != nil {
 		fmt.Println("Error in Opening the file...")
+		flow <- 0
 		return
 	}
 
@@ -115,9 +117,10 @@ func Send_File(file_path string, file_name string, url string) {
 	writer.Close()
 
 	// 5- Create the http request and send the data...
-	req, err := http.NewRequest("POST", url, &file_body)
+	req, err := http.NewRequest("Post", url, &file_body)
 	if err != nil {
 		fmt.Println("Error in creating a new http request...")
+		flow <- 0
 		return
 	}
 
@@ -130,14 +133,55 @@ func Send_File(file_path string, file_name string, url string) {
 	resp, err := client.Do(req)
 
 	if err != nil {
-		fmt.Println("Error in sending the data...")
+		// fmt.Println("Error in sending the data...")
+		flow <- 0
 		return
 	}
 
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusOK {
+		flow <- 1
+	}
+
+}
+
+func Map_Files(list_of_files []string, slave_url string, slave_id int, master_flow chan<- string) {
+	fmt.Printf("Start Sending %d Files To Slave # %d ... \n", len(list_of_files), slave_id)
+
+	flow := make(chan int, len(list_of_files))
+
+	for _, file_path := range list_of_files {
+		go Send_File(file_path, path.Base(file_path), slave_url, flow)
+	}
+
+	sent_files := 0
+	for i := 0; i < len(list_of_files); i++ {
+		sent_files += <-flow
+	}
+
+	fmt.Printf("%d Files Are Completely Sent to Slave #%d\n", sent_files, slave_id)
+	master_flow <- fmt.Sprintf("Done Sending for Slave # %d...\n", slave_id)
 }
 
 func Parse_Slave_URL(slave_ip string, port_number string, end_point string) string {
 	return fmt.Sprintf("http://%s:%s/%s", slave_ip, port_number, end_point)
+}
+
+func main() {
+
+	nodes_config := Config("./MServices/config.json")
+
+	dir_organizer := Organize_Dir_Data("Data", len(nodes_config))
+	master_flow := make(chan string, len(nodes_config))
+
+	for node_id, files := range dir_organizer {
+		node_url := Parse_Slave_URL(nodes_config[node_id], "5000", "save")
+		go Map_Files(files, node_url, node_id, master_flow)
+	}
+
+	for i := 0; i < len(nodes_config); i++ {
+		fmt.Println(<-master_flow)
+	}
+
 }
